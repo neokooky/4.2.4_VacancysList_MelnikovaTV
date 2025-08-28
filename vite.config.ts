@@ -10,4 +10,5 @@ export default defineConfig({
     setupFiles: "./src/setupTests.ts",
     css: true,
   },
+  base: "/4.2.4_VacancysList_MelnikovaTV/",
 });
