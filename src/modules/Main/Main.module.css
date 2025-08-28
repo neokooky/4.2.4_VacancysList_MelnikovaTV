@@ -1,0 +1,21 @@
+.main {
+  /* padding: 24px 220px; */
+  width: 1020px;
+  margin: 24px auto;
+  height: 100vh;
+}
+
+h1 {
+  font-weight: 700;
+  font-size: 26px;
+  line-height: 135%;
+  letter-spacing: 0%;
+}
+
+h2 {
+  color: rgba(15, 15, 16, 0.5);
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 135%;
+  letter-spacing: 0%;
+}

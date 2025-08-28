@@ -1,0 +1,46 @@
+.vacancyCard {
+  background-color: rgba(255, 255, 255, 1);
+  margin-bottom: 16px;
+  padding: 24px;
+  border-radius: 12px;
+}
+
+.title {
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 24px;
+  color: rgba(54, 79, 199, 1);
+  margin-bottom: 8px;
+}
+
+.salary {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.experience {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 24px;
+  color: rgba(15, 15, 16, 0.5);
+}
+
+.company {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 24px;
+  color: rgba(15, 15, 16, 0.5) !important;
+  margin-bottom: 4px;
+}
+
+.buttons {
+  margin-top: 16px;
+}
+
+.format {
+  display: inline;
+  padding: 1px 6px;
+  background-color: rgba(66, 99, 235, 1);
+  color: rgba(255, 255, 255, 1);
+}
