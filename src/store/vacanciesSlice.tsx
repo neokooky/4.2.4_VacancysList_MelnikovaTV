@@ -1,5 +1,25 @@
 import { createSlice } from "@reduxjs/toolkit";
-import type { VacancyItem } from "../modules/VacanciesList/VacanciesList";
+
+type VacancyItem = {
+  id: string;
+  name: string;
+  alternate_url: string;
+  salary?: {
+    from?: number | null;
+    to?: number | null;
+    currency: string;
+  } | null;
+  area?: {
+    name: string;
+  } | null;
+  employer?: {
+    name: string;
+  } | null;
+  experience?: {
+    name: string;
+  } | null;
+  work_format?: Array<{ id: string; name: string }> | null;
+};
 
 type VacancyState = {
   vacancies: VacancyItem[];

@@ -1,47 +1,66 @@
 import {
   Box,
-  // Button,
-  // Group,
+  Button,
+  Group,
   NativeSelect,
-  // Pill,
+  Pill,
   Stack,
-  // TextInput,
+  TextInput,
 } from "@mantine/core";
 import styles from "./Filters.module.css";
-// import icon from "../../images/add_icon.svg";
+import icon from "../../images/add_icon.svg";
 import { IconMapPin } from "@tabler/icons-react";
-// import { useState } from "react";
-
-type FiltersProps = {
-  skills: Array<string>;
-  setSkills: (skill: Array<string>) => void;
-  selectedCity: string;
-  setSelectedCity: (city: string) => void;
-};
-
-export const Filters = ({
-  // skills,
-  // setSkills,
-  selectedCity,
+import { memo, useState } from "react";
+import {
   setSelectedCity,
-}: FiltersProps) => {
-  // const [value, setValue] = useState("");
+  setSkills,
+  setPage,
+} from "../../store/vacanciesSlice";
+import type { RootState } from "../../store/store";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
 
-  // const addSkill = () => {
-  //   if (value.trim() !== "" && !skills.includes(value.trim())) {
-  //     setSkills([...skills, value.trim()]);
-  //     setValue("");
-  //   }
-  // };
+enum RegionValue {
+  All = "",
+  Moscow = "1",
+  SaintPetersburg = "2",
+}
 
-  // const removeSkill = (skill: string) => {
-  //   setSkills(skills.filter((s) => s !== skill));
-  // };
+// type FiltersProps = {
+//   skills: Array<string>;
+//   setSkills: (skill: Array<string>) => void;
+//   selectedCity: string;
+//   setSelectedCity: (city: string) => void;
+// };
+
+const Filters = () => {
+  const [value, setValue] = useState("");
+
+  const { skills, selectedCity } = useSelector(
+    (state: RootState) => ({
+      skills: state.vacancies.skills,
+      selectedCity: state.vacancies.selectedCity,
+    }),
+    shallowEqual
+  );
+
+  const dispatch = useDispatch();
+
+  const addSkill = () => {
+    if (value.trim() !== "" && !skills.includes(value.trim())) {
+      dispatch(setSkills([...skills, value.trim()]));
+      dispatch(setPage(1));
+      setValue("");
+    }
+  };
+
+  const removeSkill = (skill: string) => {
+    dispatch(setSkills(skills.filter((s) => s !== skill)));
+  };
 
   return (
     <>
       <Stack gap="xs">
-        {/* <Box className={styles.filter}>
+        <Box className={styles.filter}>
           <Group align="flex-end" mb="xs">
             <TextInput
               w={215}
@@ -71,7 +90,7 @@ export const Filters = ({
               </Pill>
             ))}
           </Pill.Group>
-        </Box> */}
+        </Box>
         <Box className={styles.filter}>
           <NativeSelect
             w={269}
@@ -79,15 +98,20 @@ export const Filters = ({
             leftSection={<IconMapPin size={16} />}
             description="Город"
             data={[
-              { value: "", label: "Все" },
-              { value: "1", label: "Москва" },
-              { value: "2", label: "Санкт-Петербург" },
+              { value: RegionValue.All, label: "Все" },
+              { value: RegionValue.Moscow, label: "Москва" },
+              {
+                value: RegionValue.SaintPetersburg,
+                label: "Санкт-Петербург",
+              },
             ]}
             value={selectedCity}
-            onChange={(e) => setSelectedCity(e.currentTarget.value)}
+            onChange={(e) => dispatch(setSelectedCity(e.currentTarget.value))}
           />
         </Box>
       </Stack>
     </>
   );
 };
+
+export default memo(Filters);

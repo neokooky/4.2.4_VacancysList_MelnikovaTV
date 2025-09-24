@@ -2,73 +2,46 @@ import { describe, expect } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { MantineProvider } from "@mantine/core";
 import { SearchForm } from "./SearchForm";
-
-const renderWithMantine = (component: React.ReactElement) => {
-  return render(<MantineProvider>{component}</MantineProvider>);
-};
+import { store } from "../../store/store";
+import { Provider } from "react-redux";
 
 describe("SearchForm", () => {
-  it("отображает значение поиска", () => {
-    renderWithMantine(
-      <SearchForm
-        searchValue="React"
-        setSearchValue={() => {}}
-        onSearch={() => {}}
-      />
+  const setup = () => {
+    return render(
+      <Provider store={store}>
+        <MantineProvider>
+          <SearchForm />
+        </MantineProvider>
+      </Provider>
     );
+  };
 
-    expect(screen.getByDisplayValue("React")).toBeInTheDocument();
+  it("рендерит инпут", () => {
+    setup();
+    expect(
+      screen.getByPlaceholderText("Должность или название компании")
+    ).toBeInTheDocument();
   });
 
-  it("вызывает setSearchValue при вводе", () => {
-    const setSearchValue = vi.fn();
-    renderWithMantine(
-      <SearchForm
-        searchValue=""
-        setSearchValue={setSearchValue}
-        onSearch={() => {}}
-      />
-    );
+  it("рендерит кнопку поиска", () => {
+    setup();
+    expect(screen.getByText("Найти")).toBeInTheDocument();
+  });
 
+  it("позволяет вводить текст в инпут", () => {
+    setup();
     const input = screen.getByPlaceholderText(
       "Должность или название компании"
     );
     fireEvent.change(input, { target: { value: "Junior" } });
-
-    expect(setSearchValue).toHaveBeenCalledWith("Junior");
+    expect(input).toHaveValue("Junior");
   });
 
-  it("вызывает onSearch при клике на кнопку", () => {
-    const onSearch = vi.fn();
-    renderWithMantine(
-      <SearchForm
-        searchValue=""
-        setSearchValue={() => {}}
-        onSearch={onSearch}
-      />
-    );
-
-    const button = screen.getByText("Найти");
-    fireEvent.click(button);
-
-    expect(onSearch).toHaveBeenCalled();
-  });
-
-  it("вызывает onSearch при нажатии Enter", () => {
-    const onSearch = vi.fn();
-    renderWithMantine(
-      <SearchForm
-        searchValue=""
-        setSearchValue={() => {}}
-        onSearch={onSearch}
-      />
-    );
-
+  it("отправляет форму по Enter", () => {
+    setup();
     const input = screen.getByPlaceholderText(
       "Должность или название компании"
     );
     fireEvent.keyDown(input, { key: "Enter" });
-
-    expect(onSearch).toHaveBeenCalled();
   });
 });

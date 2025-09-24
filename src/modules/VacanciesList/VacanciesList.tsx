@@ -1,43 +1,53 @@
+import { useDispatch, useSelector } from "react-redux";
 import { VacancyCard } from "../../components/VacancyCard/VacancyCard";
 import styles from "./VacanciesList.module.css";
 import { Box, Flex, Pagination } from "@mantine/core";
-
-export type VacancyItem = {
-  id: string;
-  name: string;
-  alternate_url: string;
-  salary?: {
-    from?: number | null;
-    to?: number | null;
-    currency: string;
-  } | null;
-  area?: {
-    name: string;
-  } | null;
-  employer?: {
-    name: string;
-  } | null;
-  experience?: {
-    name: string;
-  } | null;
-  work_format?: Array<{ id: string; name: string }> | null;
-};
-
-type VacanciesListProps = {
-  vacancies: Array<VacancyItem>;
-  totalPages: number;
-  setPage: (page: number) => void;
-  loading: boolean;
-  page: number;
-};
-
-export const VacanciesList = ({
-  vacancies,
-  totalPages,
+import type { RootState } from "../../store/store";
+import {
   setPage,
-  loading,
-  page,
-}: VacanciesListProps) => {
+  setLoading,
+  setVacancies,
+  setTotalPages,
+} from "../../store/vacanciesSlice";
+import { useEffect } from "react";
+import { fetchVacancies } from "../../api/fetchVacancies";
+
+export const VacanciesList = () => {
+  const {
+    loading,
+    vacancies,
+    totalPages,
+    page,
+    searchValue,
+    skills,
+    selectedCity,
+  } = useSelector((state: RootState) => state.vacancies);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const loadVacancies = async () => {
+      dispatch(setLoading(true));
+      try {
+        const data = await fetchVacancies(
+          page,
+          searchValue,
+          skills,
+          selectedCity
+        );
+
+        dispatch(setVacancies(data.items || []));
+        dispatch(setTotalPages(data.pages || 0));
+      } catch (error) {
+        console.error("Ошибка загрузки вакансий: ", error);
+      } finally {
+        dispatch(setLoading(false));
+      }
+    };
+
+    loadVacancies();
+  }, [page, skills, selectedCity, searchValue, dispatch]);
+
   return (
     <>
       <Box className={styles.vacanciesList}>
@@ -80,13 +90,15 @@ export const VacanciesList = ({
             );
           })
         )}
-
         <Flex justify="center" mt="md" mb={24}>
           {totalPages > 1 && (
             <Pagination
               total={totalPages}
               value={page}
-              onChange={(newPage) => setPage(newPage)}
+              onChange={(newPage) => {
+                dispatch(setPage(newPage));
+                window.scrollTo(0, 0);
+              }}
             />
           )}
         </Flex>

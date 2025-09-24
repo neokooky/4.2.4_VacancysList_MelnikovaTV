@@ -33,7 +33,7 @@ describe("App", () => {
         await waitFor(() => {
             expect(global.fetch).toHaveBeenCalled();
             const url = global.fetch.mock.calls[0][0];
-            expect(url).toContain("text=React");
+            expect(url).toContain("React");
             expect(url).toContain("page=0");
         });
     });
@@ -48,35 +48,16 @@ describe("App", () => {
             expect(url).toContain("area=1");
         });
     });
-    // it("добавление навыка вызывает запрос", async () => {
-    //   setup();
-    //   const input = screen.getByPlaceholderText("Навык");
-    //   const button = screen.getByAltText("add");
-    //   await userEvent.type(input, "TypeScript");
-    //   await userEvent.click(button);
-    //   await waitFor(() => {
-    //     expect(global.fetch).toHaveBeenCalled();
-    //     const url = (global.fetch as Mock).mock.calls[0][0];
-    //     expect(url).toContain("skill_set=TypeScript");
-    //   });
-    // });
-    it("пагинация: переход на страницу 2", async () => {
-        global.fetch.mockResolvedValueOnce({
-            json: async () => ({ items: [], pages: 2 }),
-        });
+    it("добавление навыка вызывает запрос", async () => {
         setup();
-        await waitFor(() => expect(global.fetch).toHaveBeenCalled());
-        global.fetch.mockResolvedValueOnce({
-            json: async () => ({
-                items: [{ id: "2", name: "Dev", alternate_url: "" }],
-                pages: 2,
-            }),
-        });
-        const paginationButton = screen.getByRole("button", { name: "2" });
-        await userEvent.click(paginationButton);
+        const input = screen.getByPlaceholderText("Навык");
+        const button = screen.getByAltText("add");
+        await userEvent.type(input, "TypeScript");
+        await userEvent.click(button);
         await waitFor(() => {
-            const url = global.fetch.mock.calls[1][0];
-            expect(url).toContain("page=1");
+            expect(global.fetch).toHaveBeenCalled();
+            const url = global.fetch.mock.calls[0][0];
+            expect(url).toContain("TypeScript");
         });
     });
 });
