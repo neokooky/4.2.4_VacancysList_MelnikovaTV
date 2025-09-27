@@ -7,5 +7,5 @@ export default defineConfig({
     outDir: "docs",
   },
   plugins: [react()],
-  base: "/4.2.4_VacancysList_MelnikovaTV/",
+  base: "./",
 });
