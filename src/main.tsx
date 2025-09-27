@@ -12,7 +12,7 @@ createRoot(document.getElementById("root")!).render(
   <Provider store={store}>
     <StrictMode>
       <MantineProvider>
-        <BrowserRouter>
+        <BrowserRouter basename="/4.2.4_VacancysList_MelnikovaTV">
           <App />
         </BrowserRouter>
       </MantineProvider>
