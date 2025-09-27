@@ -1,3 +1,7 @@
 .vacanciesList {
   width: 659px;
 }
+
+.vacancyCardWrapper {
+  margin-bottom: 16px;
+}

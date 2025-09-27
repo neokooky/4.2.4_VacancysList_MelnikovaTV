@@ -1,10 +1,13 @@
+export const VACANCIES_API_BASE_URL = "https://api.hh.ru/vacancies";
+
 export const fetchVacancies = async (
   page: number,
   searchValue: string,
   skills: string[],
   selectedCity: string
 ) => {
-  const url = new URL("https://api.hh.ru/vacancies");
+  const url = new URL(VACANCIES_API_BASE_URL);
+
   url.searchParams.append("industry", "7");
   url.searchParams.append("professional_role", "96");
 

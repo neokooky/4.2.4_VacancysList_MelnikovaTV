@@ -21,6 +21,7 @@ export const VacanciesList = () => {
     searchValue,
     skills,
     selectedCity,
+    filtersInitialized,
   } = useSelector((state: RootState) => state.vacancies);
 
   const dispatch = useDispatch();
@@ -45,8 +46,8 @@ export const VacanciesList = () => {
       }
     };
 
-    loadVacancies();
-  }, [page, skills, selectedCity, searchValue, dispatch]);
+    if (filtersInitialized) loadVacancies();
+  }, [page, skills, selectedCity, searchValue, dispatch, filtersInitialized]);
 
   return (
     <>
@@ -70,23 +71,25 @@ export const VacanciesList = () => {
               ? { id: "ON_SITE", name: "Офис" }
               : null;
             return (
-              <VacancyCard
-                mainUrl={vacancy.alternate_url}
-                key={vacancy.id}
-                title={vacancy.name}
-                company={vacancy.employer?.name || "Не указано"}
-                salary={
-                  vacancy.salary
-                    ? `${vacancy.salary.from ? vacancy.salary.from : ""}${
-                        vacancy.salary.to ? ` - ${vacancy.salary.to}` : ""
-                      } ${vacancy.salary.currency}`
-                    : "Не указана"
-                }
-                city={vacancy.area?.name || null}
-                experience={vacancy.experience?.name || ""}
-                formatId={format?.id || null}
-                formatLabel={format?.name || null}
-              />
+              <div key={vacancy.id} className={styles.vacancyCardWrapper}>
+                <VacancyCard
+                  mainUrl={vacancy.alternate_url}
+                  title={vacancy.name}
+                  company={vacancy.employer?.name || "Не указано"}
+                  salary={
+                    vacancy.salary
+                      ? `${vacancy.salary.from ? vacancy.salary.from : ""}${
+                          vacancy.salary.to ? ` - ${vacancy.salary.to}` : ""
+                        } ${vacancy.salary.currency}`
+                      : "Не указана"
+                  }
+                  city={vacancy.area?.name || null}
+                  experience={vacancy.experience?.name || ""}
+                  formatId={format?.id || null}
+                  formatLabel={format?.name || null}
+                  id={vacancy.id}
+                />
+              </div>
             );
           })
         )}

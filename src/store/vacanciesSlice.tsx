@@ -19,6 +19,7 @@ type VacancyItem = {
     name: string;
   } | null;
   work_format?: Array<{ id: string; name: string }> | null;
+  description?: string;
 };
 
 type VacancyState = {
@@ -29,6 +30,7 @@ type VacancyState = {
   skills: Array<string>;
   selectedCity: string;
   searchValue: string;
+  filtersInitialized: boolean;
 };
 
 const initialState: VacancyState = {
@@ -39,6 +41,7 @@ const initialState: VacancyState = {
   skills: ["TypeScript", "React", "Redux"],
   selectedCity: "",
   searchValue: "",
+  filtersInitialized: false,
 };
 
 export const vacanciesSlice = createSlice({
@@ -66,6 +69,9 @@ export const vacanciesSlice = createSlice({
     setSkills: (state, action) => {
       state.skills = action.payload;
     },
+    setFiltersInitialized: (state) => {
+      state.filtersInitialized = true;
+    },
   },
 });
 
@@ -78,4 +84,5 @@ export const {
   setSearchValue,
   setVacancies,
   setSkills,
+  setFiltersInitialized,
 } = vacanciesSlice.actions;

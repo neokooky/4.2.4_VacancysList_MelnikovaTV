@@ -1,5 +1,6 @@
 import styles from "./VacancyCard.module.css";
 import { Button, Flex, Group, Badge } from "@mantine/core";
+import { Link } from "react-router-dom";
 
 type CardProps = {
   title: string;
@@ -10,6 +11,7 @@ type CardProps = {
   mainUrl: string;
   formatId: string | null;
   formatLabel: string | null;
+  id: string;
 };
 
 export const VacancyCard = ({
@@ -21,6 +23,7 @@ export const VacancyCard = ({
   mainUrl,
   formatId,
   formatLabel,
+  id,
 }: CardProps) => {
   return (
     <div className={styles.vacancyCard}>
@@ -49,14 +52,16 @@ export const VacancyCard = ({
 
       <p>{city}</p>
       <Group className={styles.buttons}>
-        <Button color="dark" variant="filled">
-          Смотреть вакансию
-        </Button>
-        <a href={mainUrl} target="_blank">
+        <Link to={`/vacancies/${id}`}>
+          <Button color="dark" variant="filled">
+            Смотреть вакансию
+          </Button>
+        </Link>
+        <Link to={mainUrl}>
           <Button color="gray" variant="light">
             Откликнуться
           </Button>
-        </a>
+        </Link>
       </Group>
     </div>
   );

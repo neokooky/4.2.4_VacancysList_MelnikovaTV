@@ -1,21 +1,32 @@
 import { Button, Group, TextInput } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
-import { useDispatch } from "react-redux";
-// import type { RootState } from "../../store/store";
+import { useDispatch, useSelector } from "react-redux";
 import { setSearchValue, setPage } from "../../store/vacanciesSlice";
 import { useRef } from "react";
-
-// type SearchFormProps = {
-//   setIsSearchTriggered: (trigger: boolean) => void;
-// };
+import { useSearchParams } from "react-router-dom";
+import type { RootState } from "../../store/store";
 
 export const SearchForm = () => {
+  const [, setSearchParams] = useSearchParams();
+
   const inputRef = useRef<HTMLInputElement>(null);
 
   const dispatch = useDispatch();
 
   const onSearch = (value: string | undefined) => {
     dispatch(setSearchValue(value));
+
+    setSearchParams((prev) => {
+      const newParams = new URLSearchParams(prev);
+      if (value) {
+        newParams.set("query", value);
+      } else {
+        newParams.delete("query");
+      }
+
+      return newParams;
+    });
+
     dispatch(setPage(1));
   };
 
@@ -33,14 +44,7 @@ export const SearchForm = () => {
         placeholder="Должность или название компании"
         leftSection={<IconSearch size={16} />}
       />
-      <Button
-        variant="filled"
-        color="#4263eb"
-        h={40}
-        onClick={() => {
-          onSearch(inputRef.current?.value);
-        }}
-      >
+      <Button variant="filled" color="#4263eb" h={40} type="submit">
         Найти
       </Button>
     </Group>

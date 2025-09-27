@@ -10,27 +10,17 @@ import {
 import styles from "./Filters.module.css";
 import icon from "../../images/add_icon.svg";
 import { IconMapPin } from "@tabler/icons-react";
-import { memo, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import {
   setSelectedCity,
   setSkills,
   setPage,
+  setFiltersInitialized,
 } from "../../store/vacanciesSlice";
 import type { RootState } from "../../store/store";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
-
-enum RegionValue {
-  All = "",
-  Moscow = "1",
-  SaintPetersburg = "2",
-}
-
-// type FiltersProps = {
-//   skills: Array<string>;
-//   setSkills: (skill: Array<string>) => void;
-//   selectedCity: string;
-//   setSelectedCity: (city: string) => void;
-// };
+import { useSearchParams } from "react-router-dom";
+import { cityOptions, RegionValue } from "../../constants";
 
 const Filters = () => {
   const [value, setValue] = useState("");
@@ -45,6 +35,44 @@ const Filters = () => {
 
   const dispatch = useDispatch();
 
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  useEffect(() => {
+    setSearchParams((prev) => {
+      const params = new URLSearchParams(prev);
+
+      if (selectedCity !== RegionValue.All) {
+        const label = cityOptions.find(
+          (opt) => opt.value === selectedCity
+        )?.label;
+        if (label) params.set("city", label);
+      } else {
+        params.delete("city");
+      }
+
+      params.delete("skill");
+      skills.forEach((skill) => params.append("skill", skill));
+
+      return params;
+    });
+  }, [skills, selectedCity, setSearchParams]);
+
+  useEffect(() => {
+    const cityParam = searchParams.get("city");
+    console.log("сейчас параметр сити в юрл:", cityParam?.toString());
+    const matchedOption = cityOptions.find(
+      (option) => option.label === cityParam
+    );
+    const cityValue = matchedOption?.value || RegionValue.All;
+    console.log("значит город для отображения: ", cityValue);
+    dispatch(setSelectedCity(cityValue));
+
+    const skillsParam = searchParams.getAll("skill");
+    dispatch(setSkills(skillsParam));
+
+    dispatch(setFiltersInitialized());
+  }, [dispatch, searchParams]);
+
   const addSkill = () => {
     if (value.trim() !== "" && !skills.includes(value.trim())) {
       dispatch(setSkills([...skills, value.trim()]));
@@ -55,6 +83,10 @@ const Filters = () => {
 
   const removeSkill = (skill: string) => {
     dispatch(setSkills(skills.filter((s) => s !== skill)));
+  };
+
+  const handleChange = (e) => {
+    dispatch(setSelectedCity(e.currentTarget.value));
   };
 
   return (
@@ -97,16 +129,9 @@ const Filters = () => {
             data-testid="city-select"
             leftSection={<IconMapPin size={16} />}
             description="Город"
-            data={[
-              { value: RegionValue.All, label: "Все" },
-              { value: RegionValue.Moscow, label: "Москва" },
-              {
-                value: RegionValue.SaintPetersburg,
-                label: "Санкт-Петербург",
-              },
-            ]}
+            data={cityOptions}
             value={selectedCity}
-            onChange={(e) => dispatch(setSelectedCity(e.currentTarget.value))}
+            onChange={handleChange}
           />
         </Box>
       </Stack>

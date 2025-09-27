@@ -1,11 +1,10 @@
 import { Header } from "./modules/Header/Header";
 import logo from "./images/logo.svg";
 import styles from "./App.module.css";
-import { Main } from "./modules/Main/Main";
-import { SearchForm } from "./components/SearchForm/SearchForm";
-import { Box, Group } from "@mantine/core";
-import Filters from "./components/Filters/Filters";
-import { VacanciesList } from "./modules/VacanciesList/VacanciesList";
+import { Group } from "@mantine/core";
+import { Route, Routes } from "react-router-dom";
+import { VacanciesPage } from "./pages/VacanciesPage/VacanciesPage";
+import { VacancyPage } from "./pages/VacancyPage/VacancyPage";
 
 function App() {
   return (
@@ -23,21 +22,10 @@ function App() {
           </Header.Link>
         </Group>
       </Header>
-      <Main>
-        <Group className={styles["main-search"]} justify="space-between">
-          <Box>
-            <h1>Список вакансий</h1>
-            <h2>по профессии Frontend-разработчик</h2>
-          </Box>
-          <Box>
-            <SearchForm />
-          </Box>
-        </Group>
-        <Group justify="space-between" align="flex-start">
-          <Filters />
-          <VacanciesList />
-        </Group>
-      </Main>
+      <Routes>
+        <Route path="/" element={<VacanciesPage />}></Route>
+        <Route path="/vacancies/:id" element={<VacancyPage />}></Route>
+      </Routes>
     </>
   );
 }
