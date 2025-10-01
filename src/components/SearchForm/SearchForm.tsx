@@ -1,10 +1,9 @@
 import { Button, Group, TextInput } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setSearchValue, setPage } from "../../store/vacanciesSlice";
 import { useRef } from "react";
 import { useSearchParams } from "react-router-dom";
-import type { RootState } from "../../store/store";
 
 export const SearchForm = () => {
   const [, setSearchParams] = useSearchParams();
@@ -13,16 +12,13 @@ export const SearchForm = () => {
 
   const dispatch = useDispatch();
 
-  const onSearch = (value: string | undefined) => {
+  const onSearch = (value: string) => {
     dispatch(setSearchValue(value));
 
     setSearchParams((prev) => {
       const newParams = new URLSearchParams(prev);
-      if (value) {
-        newParams.set("query", value);
-      } else {
-        newParams.delete("query");
-      }
+
+      newParams.set("query", value);
 
       return newParams;
     });
@@ -32,7 +28,9 @@ export const SearchForm = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSearch(inputRef.current?.value);
+    if (inputRef.current) {
+      onSearch(inputRef.current.value);
+    }
   };
 
   return (

@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-type VacancyItem = {
+export type VacancyItem = {
   id: string;
   name: string;
   alternate_url: string;

@@ -2,9 +2,10 @@ import { Header } from "./modules/Header/Header";
 import logo from "./images/logo.svg";
 import styles from "./App.module.css";
 import { Group } from "@mantine/core";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import { VacanciesPage } from "./pages/VacanciesPage/VacanciesPage";
 import { VacancyPage } from "./pages/VacancyPage/VacancyPage";
+import { NotFound } from "./pages/NotFound/NotFound";
 
 function App() {
   return (
@@ -23,8 +24,10 @@ function App() {
         </Group>
       </Header>
       <Routes>
-        <Route path="/" element={<VacanciesPage />}></Route>
+        <Route path="/" element={<Navigate to="/vacancies" replace />} />
+        <Route path="/vacancies" element={<VacanciesPage />} />
         <Route path="/vacancies/:id" element={<VacancyPage />}></Route>
+        <Route path="*" element={<NotFound />}></Route>
       </Routes>
     </>
   );

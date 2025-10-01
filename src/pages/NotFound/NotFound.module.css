@@ -1,0 +1,26 @@
+.notFound {
+  margin-top: 72px;
+  width: 707px;
+  height: 556px;
+  background-color: white;
+  display: flex;
+  margin-inline: auto;
+  padding: 32px;
+  border-radius: 12px;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.return {
+  display: flex;
+  gap: 40px;
+}
+
+.returnButton {
+  display: flex;
+  align-items: center;
+}
+
+.notification h1 {
+  margin-bottom: 12px;
+}

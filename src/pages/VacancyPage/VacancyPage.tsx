@@ -5,10 +5,11 @@ import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { fetchVacancyById } from "../../api/fetchVacancyById";
 import { Flex, Box } from "@mantine/core";
+import type { VacancyItem } from "../../store/vacanciesSlice";
 
 export const VacancyPage = () => {
   const { id } = useParams();
-  const [vacancy, setVacancy] = useState(null);
+  const [vacancy, setVacancy] = useState<VacancyItem | null>(null);
   const [loading, setLoading] = useState(true);
 
   const dispatch = useDispatch();
@@ -46,27 +47,6 @@ export const VacancyPage = () => {
       </Flex>
     );
   }
-
-  // if (!loading && !vacancy) {
-  //   return (
-  //     <div
-  //       style={{
-  //         width: 658,
-  //         backgroundColor: "white",
-  //         borderRadius: 12,
-  //         marginTop: 24,
-  //         display: "flex",
-  //         marginInline: "auto",
-  //         height: 180,
-  //         padding: 16,
-  //         alignItems: "center",
-  //         justifyContent: "center",
-  //       }}
-  //     >
-  //       Вакансия не найдена
-  //     </div>
-  //   );
-  // }
 
   return (
     <>
@@ -125,22 +105,3 @@ export const VacancyPage = () => {
     </>
   );
 };
-
-// : (
-//         <div
-//           style={{
-//             width: 658,
-//             backgroundColor: "white",
-//             borderRadius: 12,
-//             marginTop: 24,
-//             display: "flex",
-//             marginInline: "auto",
-//             height: 180,
-//             padding: 16,
-//             alignItems: "center",
-//             justifyContent: "center",
-//           }}
-//         >
-//           Вакансия не найдена
-//         </div>
-//       )

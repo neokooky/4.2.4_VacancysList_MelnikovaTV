@@ -1,41 +1,53 @@
 import { useDispatch, useSelector } from "react-redux";
-import { VacancyCard } from "../../components/VacancyCard/VacancyCard";
 import styles from "./VacanciesList.module.css";
-import { Box, Flex, Pagination } from "@mantine/core";
+import { Box } from "@mantine/core";
 import type { RootState } from "../../store/store";
 import {
-  setPage,
   setLoading,
   setVacancies,
   setTotalPages,
+  setSearchValue,
 } from "../../store/vacanciesSlice";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { fetchVacancies } from "../../api/fetchVacancies";
+import { getCityValue } from "../../helpers/getCityValue";
+import { CityTabs } from "../../components/CityTabs/CityTabs";
+import { useSearchParams } from "react-router-dom";
 
 export const VacanciesList = () => {
-  const {
-    loading,
-    vacancies,
-    totalPages,
-    page,
-    searchValue,
-    skills,
-    selectedCity,
-    filtersInitialized,
-  } = useSelector((state: RootState) => state.vacancies);
+  const { page, searchValue, skills, filtersInitialized } = useSelector(
+    (state: RootState) => state.vacancies
+  );
 
   const dispatch = useDispatch();
+
+  const [searchParams] = useSearchParams();
+
+  const [activeCity, setActiveCity] = useState(() => {
+    const city = searchParams.get("city");
+    if (city === "Москва" || city === "Санкт-Петербург") {
+      return city;
+    } else {
+      return "Все";
+    }
+  });
+
+  useEffect(() => {
+    const queryParam = searchParams.get("query");
+
+    if (queryParam !== searchValue) {
+      dispatch(setSearchValue(queryParam));
+    }
+  }, [dispatch, searchParams, searchValue]);
 
   useEffect(() => {
     const loadVacancies = async () => {
       dispatch(setLoading(true));
+
       try {
-        const data = await fetchVacancies(
-          page,
-          searchValue,
-          skills,
-          selectedCity
-        );
+        const cityValue = getCityValue(activeCity);
+
+        const data = await fetchVacancies(page, searchValue, skills, cityValue);
 
         dispatch(setVacancies(data.items || []));
         dispatch(setTotalPages(data.pages || 0));
@@ -47,65 +59,11 @@ export const VacanciesList = () => {
     };
 
     if (filtersInitialized) loadVacancies();
-  }, [page, skills, selectedCity, searchValue, dispatch, filtersInitialized]);
+  }, [page, skills, searchValue, dispatch, filtersInitialized, activeCity]);
 
   return (
-    <>
-      <Box className={styles.vacanciesList}>
-        {loading && (
-          <Flex justify="center" mt="md" mb={24}>
-            <Box>Загрузка вакансий...</Box>
-          </Flex>
-        )}
-        {vacancies.length === 0 && !loading ? (
-          <Box>Нет вакансий</Box>
-        ) : (
-          vacancies.map((vacancy) => {
-            const workFormats = vacancy.work_format || [];
-
-            const format = workFormats.some((f) => f.id === "HYBRID")
-              ? { id: "HYBRID", name: "Гибрид" }
-              : workFormats.some((f) => f.id === "REMOTE")
-              ? { id: "REMOTE", name: "Можно удалённо" }
-              : workFormats.some((f) => f.id === "ON_SITE")
-              ? { id: "ON_SITE", name: "Офис" }
-              : null;
-            return (
-              <div key={vacancy.id} className={styles.vacancyCardWrapper}>
-                <VacancyCard
-                  mainUrl={vacancy.alternate_url}
-                  title={vacancy.name}
-                  company={vacancy.employer?.name || "Не указано"}
-                  salary={
-                    vacancy.salary
-                      ? `${vacancy.salary.from ? vacancy.salary.from : ""}${
-                          vacancy.salary.to ? ` - ${vacancy.salary.to}` : ""
-                        } ${vacancy.salary.currency}`
-                      : "Не указана"
-                  }
-                  city={vacancy.area?.name || null}
-                  experience={vacancy.experience?.name || ""}
-                  formatId={format?.id || null}
-                  formatLabel={format?.name || null}
-                  id={vacancy.id}
-                />
-              </div>
-            );
-          })
-        )}
-        <Flex justify="center" mt="md" mb={24}>
-          {totalPages > 1 && (
-            <Pagination
-              total={totalPages}
-              value={page}
-              onChange={(newPage) => {
-                dispatch(setPage(newPage));
-                window.scrollTo(0, 0);
-              }}
-            />
-          )}
-        </Flex>
-      </Box>
-    </>
+    <Box className={styles.vacanciesList}>
+      <CityTabs activeCity={activeCity} setActiveCity={setActiveCity} />
+    </Box>
   );
 };
