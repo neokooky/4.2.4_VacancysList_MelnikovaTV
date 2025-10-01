@@ -38,7 +38,7 @@ const initialState: VacancyState = {
   page: 1,
   totalPages: 0,
   loading: false,
-  skills: ["TypeScript", "React", "Redux"],
+  skills: [],
   selectedCity: "",
   searchValue: "",
   filtersInitialized: false,

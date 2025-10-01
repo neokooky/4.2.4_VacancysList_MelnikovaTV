@@ -53,6 +53,7 @@ const Filters = () => {
   const removeSkill = (skill: string) => {
     dispatch(setSkills(skills.filter((s) => s !== skill)));
   };
+  console.log(skills);
 
   return (
     <>
