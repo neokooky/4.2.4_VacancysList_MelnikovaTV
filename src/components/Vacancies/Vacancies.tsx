@@ -38,7 +38,7 @@ export const Vacancies = () => {
           : null;
 
         return (
-          <div key={vacancy.id} className={styles.vacancyCardWrapper}>
+          <div key={vacancy.id} className={styles["vacancy-card-wrapper"]}>
             <VacancyCard
               mainUrl={vacancy.alternate_url}
               title={vacancy.name}

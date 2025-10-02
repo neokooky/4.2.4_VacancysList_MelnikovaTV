@@ -62,7 +62,7 @@ export const VacanciesList = () => {
   }, [page, skills, searchValue, dispatch, filtersInitialized, activeCity]);
 
   return (
-    <Box className={styles.vacanciesList}>
+    <Box className={styles["vacancies-list"]}>
       <CityTabs activeCity={activeCity} setActiveCity={setActiveCity} />
     </Box>
   );

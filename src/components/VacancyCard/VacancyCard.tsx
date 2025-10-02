@@ -1,6 +1,6 @@
 import styles from "./VacancyCard.module.css";
 import { Button, Flex, Group, Badge } from "@mantine/core";
-import { Link } from "react-router-dom";
+import { Link, useMatch } from "react-router-dom";
 
 type CardProps = {
   title: string;
@@ -25,8 +25,10 @@ export const VacancyCard = ({
   formatLabel,
   id,
 }: CardProps) => {
+  const match = useMatch("/vacancies/:id");
+
   return (
-    <div className={styles.vacancyCard}>
+    <div className={styles["vacancy-card"]}>
       <h3 className={styles.title}>{title}</h3>
       <Flex align="center" gap="xs" mb={16}>
         <p className={styles.salary}>{salary}</p>
@@ -52,13 +54,19 @@ export const VacancyCard = ({
 
       <p>{city}</p>
       <Group className={styles.buttons}>
-        <Link to={`/vacancies/${id}`}>
-          <Button color="dark" variant="filled">
-            Смотреть вакансию
-          </Button>
-        </Link>
+        {!match ? (
+          <Link to={`/vacancies/${id}`}>
+            <Button color="dark" variant="filled">
+              Смотреть вакансию
+            </Button>
+          </Link>
+        ) : null}
+
         <Link to={mainUrl}>
-          <Button color="gray" variant="light">
+          <Button
+            color={!match ? "gray" : "dark"}
+            variant={!match ? "light" : "filled"}
+          >
             Откликнуться
           </Button>
         </Link>

@@ -1,0 +1,16 @@
+.aboutme {
+  margin-top: 72px;
+  width: 707px;
+  min-height: 256px;
+  background-color: white;
+  display: flex;
+  margin-inline: auto;
+  padding: 32px;
+  border-radius: 12px;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.info h1 {
+  margin-bottom: 12px;
+}

@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import styles from "./Header.module.css";
+import { NavLink } from "react-router-dom";
 
 export const Header = ({ children }: { children: ReactNode }) => {
   return (
@@ -22,7 +23,6 @@ Header.Logo = ({
     <img src={src} alt={alt || "Logo"} style={{ height: 30 }} />
   </a>
 );
-
 interface LinkProps {
   href: string;
   children: React.ReactNode;
@@ -30,7 +30,12 @@ interface LinkProps {
 }
 
 Header.Link = ({ href, children, className }: LinkProps) => (
-  <a href={href} className={className}>
+  <NavLink
+    to={href}
+    className={({ isActive }) =>
+      [className, isActive ? styles.active : ""].filter(Boolean).join(" ")
+    }
+  >
     {children}
-  </a>
+  </NavLink>
 );
